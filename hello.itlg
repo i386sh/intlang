@@ -1,15 +1,13 @@
-00SNC 3 5
-00SNC 2 0
-00EE
-00PR Hello, world! $VAR_3
-00EP
-00NC 2
-00DC 3
-00SLP 500
-00EQT $VAR_2 5 11
-00GT 4
-00ADDV $VAR_3 $VAR_2 4
-00PR $VAR_4
-00EP
-00PR Done.
-00EXA
+$VAR_2 0
+$VAR_3 5
+clear
+prt Hello, world! $VAR_3
+vnc 2
+vdc 3
+slp 500
+= $VAR_2 5 10
+gt 4
+add $VAR_3 $VAR_2 4
+prt $VAR_4
+prt Done.
+exit
