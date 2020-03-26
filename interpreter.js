@@ -32,13 +32,15 @@ lineReader.on('line', function(line) {
 });
 
 function get_user_input() {
-  // https://stackoverflow.com/a/49699005
-  return new Promise((resolve, reject) => {
-    process.stdin.resume();
-
-    process.stdin.on('data', data => resolve(data.toString().trim()));
-    process.stdin.on('error', err => reject(err));
-  });
+    // https://stackoverflow.com/a/49699005
+    return new Promise((resolve, reject) => {
+        process.stdin.resume();
+        process.stdin.on('data', data => {
+            resolve(data.toString().trim())
+            // To prevent node from complaining that there's too many listeners. Oh yeah and to probably stop memory leaking too.
+            process.stdin.removeAllListeners('data')
+        });
+    });
 }
 
 let program_running = true;
@@ -50,59 +52,65 @@ lineReader.on('close', async () => {
         const command = args.shift().toLowerCase();
         // debug:
         // console.log(`command: ${command},\nargs:${args},\nreadIndex:${readIndex}`)
-        if(command.startsWith("$var_")) {
-          var_ind = command.split("$var_");
-          if(var_ind[1]) {
-            if(args[0]) {
-              x = parseFloat(args[0]);
-              if(isNaN(x)){
-                m = args.join(" ");
-                if(m.startsWith("$RND_")) {
-                  r = m.split('$RND_');
-                  z = r[1].split('_');
-                  memory[var_ind[1]] = Math.floor(Math.random() * (+z[1] - + z[0]) ) + +z[0];
-                  // This also is pretty bad but it does do the trick.
-                } else {
-                  memory[var_ind[1]] = args.join(" ");
+        if (command.startsWith("$var_")) {
+            var_ind = command.split("$var_");
+            if (var_ind[1]) {
+                if (args[0]) {
+                    x = parseFloat(args[0]);
+                    if (isNaN(x)) {
+                        m = args.join(" ");
+                        if (m.startsWith("$RND_")) {
+                            r = m.split('$RND_');
+                            z = r[1].split('_');
+                            memory[var_ind[1]] = Math.floor(Math.random() * (+z[1] - +z[0])) + +z[0];
+                            // This also is pretty bad but it does do the trick.
+                        } else {
+                            memory[var_ind[1]] = args.join(" ");
+                        }
+                    } else {
+                        memory[var_ind[1]] = x;
+                    }
                 }
-              } else {
-                memory[var_ind[1]] = x;
-              }
             }
-          }
-          gtx();
+            gtx();
         } else if (command == "") {
-          gtx();
-        } else if(command == "get_input") {
-          if (!args[0]) throw new Error("no variable to save to")
-          memory[args[0]] = await get_user_input()
-          gtx();
+            gtx();
+        } else if (command == "get_input") {
+            if (!args[0]) throw new Error("no variable to save to")
+            memory[args[0]] = await get_user_input()
+            gtx();
         } else if (command == "clear") {
             process.stdout.write("\u001b[2J\u001b[0;0H");
             gtx();
+        } else if(command == "newline") {
+          process.stdout.write("\n");
+          gtx();
         } else if (command == "prt") {
-          // This is probably the worst code I've written, but I'm not going to complain. It works.
+            // This is probably the worst code I've written, but I'm not going to complain. It works.
             goto = false;
             if (!args[0]) throw new Error("no text to print")
             pr_output = args.join(" ");
             howmanyvars = pr_output.match(/\$VAR_/g) || 0;
             if (howmanyvars !== 0) howmanyvars = howmanyvars.length;
             varsprocessed = 0;
-            if(howmanyvars == 0) {
-              process.stdout.write(pr_output+"\n");
-              gtx();
+            if (howmanyvars == 0) {
+                process.stdout.write(pr_output + "\n");
+                gtx();
             } else {
-              args.forEach((output) => {
-                  if (output.startsWith("$VAR_")) {
-                      rpt = output.split("$VAR_");
-                      pr_output = pr_output.replace("$VAR_"+rpt[1].match(/\d+/g), memory[rpt[1].match(/\d+/g)]);
-                      varsprocessed += 1
-                  }
-                  if (varsprocessed == howmanyvars) {
-                      process.stdout.write(pr_output+"\n");
-                  }
-              })
-              gtx();
+               output_done = false;
+                args.forEach((output) => {
+                    if (output.startsWith("$VAR_")) {
+                        rpt = output.split("$VAR_");
+                        pr_output = pr_output.replace("$VAR_" + rpt[1].match(/\d+/g), memory[rpt[1].match(/\d+/g)]);
+                        varsprocessed += 1
+                    }
+                    if (varsprocessed == howmanyvars) {
+                      if(output_done == true) return;
+                      output_done = true;
+                      process.stdout.write(pr_output + "\n");
+                    }
+                })
+                gtx()
             }
         } else if (command == "vnc") {
             if (!args[0]) throw new Error("no memory address to increment")
@@ -266,7 +274,7 @@ lineReader.on('close', async () => {
             memory[args[2]] = fv / sv;
             gtx();
         } else {
-          throw new Error(`Unknown code (${line}) on line ${readIndex}`)
+            throw new Error(`Unknown code (${line}) on line ${readIndex}`)
         }
     }
 })
