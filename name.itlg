@@ -1,0 +1,6 @@
+prt What's your name?
+get_input 1
+prt How old are you?
+get_input 2
+prt Hello, $VAR_1. You are $VAR_2 years old.
+exit
