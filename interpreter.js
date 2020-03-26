@@ -1,8 +1,8 @@
-// Esoteric interpreted language.
 // intlang written by i386sh, 2019.
 // project started March 25th 2020 (AU)
 // last updated March 26th 2020 (AU)
 const fs = require("fs")
+const readline = require("readline");
 
 argv = process.argv.splice(2);
 if (!argv[0]) throw new Error("No program to run. Specify a code file (eg. ping.itlg)")
@@ -11,16 +11,7 @@ if (!fs.existsSync(argv[0])) {
 }
 var memory = [];
 
-function hex2a(hexx) {
-    var hex = hexx.toString(); //force conversion
-    var str = '';
-    for (var i = 0;
-        (i < hex.length && hex.substr(i, 2) !== '00'); i += 2)
-        str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
-    return str;
-}
-
-var lineReader = require('readline').createInterface({
+var lineReader = readline.createInterface({
     input: fs.createReadStream(argv[0])
 });
 
@@ -40,7 +31,18 @@ lineReader.on('line', function(line) {
     code.push(line);
 });
 
+function get_user_input() {
+  // https://stackoverflow.com/a/49699005
+  return new Promise((resolve, reject) => {
+    process.stdin.resume();
+
+    process.stdin.on('data', data => resolve(data.toString().trim()));
+    process.stdin.on('error', err => reject(err));
+  });
+}
+
 let program_running = true;
+
 lineReader.on('close', async () => {
     while (program_running) {
         const line = code[readIndex - 1];
@@ -54,7 +56,15 @@ lineReader.on('close', async () => {
             if(args[0]) {
               x = parseFloat(args[0]);
               if(isNaN(x)){
-                memory[var_ind[1]] = args.join(" ");
+                m = args.join(" ");
+                if(m.startsWith("$RND_")) {
+                  r = m.split('$RND_');
+                  z = r[1].split('_');
+                  memory[var_ind[1]] = Math.floor(Math.random() * (+z[1] - + z[0]) ) + +z[0];
+                  // This also is pretty bad but it does do the trick.
+                } else {
+                  memory[var_ind[1]] = args.join(" ");
+                }
               } else {
                 memory[var_ind[1]] = x;
               }
@@ -63,27 +73,37 @@ lineReader.on('close', async () => {
           gtx();
         } else if (command == "") {
           gtx();
+        } else if(command == "get_input") {
+          if (!args[0]) throw new Error("no variable to save to")
+          memory[args[0]] = await get_user_input()
+          gtx();
         } else if (command == "clear") {
             process.stdout.write("\u001b[2J\u001b[0;0H");
             gtx();
         } else if (command == "prt") {
+          // This is probably the worst code I've written, but I'm not going to complain. It works.
             goto = false;
             if (!args[0]) throw new Error("no text to print")
             pr_output = args.join(" ");
-            howmanyvars = pr_output.match(/\$VAR_/g) || ""
-            if (howmanyvars !== "") howmanyvars = howmanyvars.length;
+            howmanyvars = pr_output.match(/\$VAR_/g) || 0;
+            if (howmanyvars !== 0) howmanyvars = howmanyvars.length;
             varsprocessed = 0;
-            args.forEach((output) => {
-                if (output.startsWith("$VAR_")) {
-                    rpt = output.split("$VAR_");
-                    pr_output = pr_output.replace(output, memory[rpt[1]]);
-                    varsprocessed += 1
-                }
-                if (varsprocessed == howmanyvars) {
-                    process.stdout.write(pr_output+"\n");
-                }
-            })
-            gtx();
+            if(howmanyvars == 0) {
+              process.stdout.write(pr_output+"\n");
+              gtx();
+            } else {
+              args.forEach((output) => {
+                  if (output.startsWith("$VAR_")) {
+                      rpt = output.split("$VAR_");
+                      pr_output = pr_output.replace("$VAR_"+rpt[1].match(/\d+/g), memory[rpt[1].match(/\d+/g)]);
+                      varsprocessed += 1
+                  }
+                  if (varsprocessed == howmanyvars) {
+                      process.stdout.write(pr_output+"\n");
+                  }
+              })
+              gtx();
+            }
         } else if (command == "vnc") {
             if (!args[0]) throw new Error("no memory address to increment")
             memory[args[0]] += 1;
