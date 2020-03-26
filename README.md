@@ -18,6 +18,7 @@ GET_INPUT <var> - Gets input from user then saves it to <var>
 VNC <var> - Increment <var> by 1.
 VDC <var> - Decrement <var> by 1.
 EXIT - Exit application gracefully.
+NEWLINE - Prints a new line.
 SLP <milliseconds/$VAR_<var>> - Sleep for <milliseconds/$VAR_<var>>.
 GT <line> - Go to <line>.
 = $VAR_<var1> $VAR_<var2> <line> - If <var1> is equal to <var2> go to <line> (works for both strings and integers).
@@ -34,7 +35,6 @@ Deprecated functions:
 00VSTR <var> <str> - Set <var> to <str>. - DEPRECATED: use $VAR_<var> <str>
 00SNC <var> <int> - Set <var> to <int>. - DEPRECATED: use $VAR_<var> 0
 00INITNC <var> - Initialise <var> to 0 for 00NC or 00DC. - DEPRECATED: use $VAR_<var> 0
-00EP - end print (newline (\n)). - DEPRECATED: prt now adds a newline after printing
 ```
 
 ##### Example Application
@@ -53,7 +53,6 @@ add $VAR_3 $VAR_2 4
 prt $VAR_4
 prt Done.
 exit
-
 ```
 Refer to the function list to understand what to do.
 
