@@ -1,0 +1,10 @@
+$VAR_1 $RND_0_15
+prt I'm thinking of a number between 0 and 15, can you guess it?
+prt What's your guess?
+GET_INPUT 2
+= $VAR_2 $VAR_1 9
+prt Wrong!
+newline
+gt 4
+prt Correct answer!
+exit
