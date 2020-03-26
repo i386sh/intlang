@@ -9,6 +9,7 @@ if (!argv[0]) throw new Error("No program to run. Specify a code file (eg. ping.
 if (!fs.existsSync(argv[0])) {
     throw new Error(argv[0] + " is not a valid code file.")
 }
+
 var memory = [];
 
 var lineReader = readline.createInterface({
@@ -82,9 +83,9 @@ lineReader.on('close', async () => {
         } else if (command == "clear") {
             process.stdout.write("\u001b[2J\u001b[0;0H");
             gtx();
-        } else if(command == "newline") {
-          process.stdout.write("\n");
-          gtx();
+        } else if (command == "newline") {
+            process.stdout.write("\n");
+            gtx();
         } else if (command == "prt") {
             // This is probably the worst code I've written, but I'm not going to complain. It works.
             goto = false;
@@ -97,7 +98,7 @@ lineReader.on('close', async () => {
                 process.stdout.write(pr_output + "\n");
                 gtx();
             } else {
-               output_done = false;
+                output_done = false;
                 args.forEach((output) => {
                     if (output.startsWith("$VAR_")) {
                         rpt = output.split("$VAR_");
@@ -105,9 +106,9 @@ lineReader.on('close', async () => {
                         varsprocessed += 1
                     }
                     if (varsprocessed == howmanyvars) {
-                      if(output_done == true) return;
-                      output_done = true;
-                      process.stdout.write(pr_output + "\n");
+                        if (output_done == true) return;
+                        output_done = true;
+                        process.stdout.write(pr_output + "\n");
                     }
                 })
                 gtx()
