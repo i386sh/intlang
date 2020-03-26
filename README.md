@@ -3,16 +3,18 @@ An interpreted programming language, that is simple and easy to read.
 
 ##### Functions
 I'm probably going to add many more functions to intlang as I don't have too much to do during this time.
-  
+
 26/3/20: I updated how functions are read so it should be more simple for a human to understand.  
 As of 26/3/20 it has these functions:
 ```
 Variable:
 $VAR_<var> <int/float/string> - Saves <int/float/string> to <var>
+$VAR_<var> $RND_<min>_<max> - Generates a random number between <min> and <max> and saves it to <var>
 
 Main Functions:
 CLEAR - clear screen.
-PRT <string> [optional: $VAR_<varindex> ]- Print <string>.
+PRT <string> [optional: $VAR_<varindex> ] - Print <string>.
+GET_INPUT <var> - Gets input from user then saves it to <var>
 VNC <var> - Increment <var> by 1.
 VDC <var> - Decrement <var> by 1.
 EXIT - Exit application gracefully.
@@ -60,7 +62,7 @@ To execute an intlang program, currently you'll need node.js, but I'm probably g
 
 `node interpreter.js <script name>` is the currently preferred method to run an application in intlang.
 
-intlang requires no external npm libraries, only built-in node.js libraries (fs, readline).  
-  
-  
+intlang requires no external npm libraries, only built-in node.js libraries (fs, readline).
+
+
 intlang was written by i386sh in March of 2020. Purely a hobby project.
