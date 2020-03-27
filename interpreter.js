@@ -1,19 +1,28 @@
-// intlang written by i386sh, 2019.
-// project started March 25th 2020 (AU)
-// last updated March 26th 2020 (AU)
+/*
+.     .
+` , __   _/_    |     ___  , __     ___.
+| |'  `.  |     |    /   ` |'  `. .'   `
+| |    |  |     |   |    | |    | |    |
+/ /    |  \__/ /\__ `.__/| /    |  `---|
+                                   \___/
+
+A simple to learn, and easy to read programming language.
+  A project started by i386sh on the 25th of March 2020.
+  Last updated: 28/03/2020 (AU)
+*/
 const fs = require("fs")
 const readline = require("readline");
 
-argv = process.argv.splice(2);
-if (!argv[0]) throw new Error("No program to run. Specify a code file (eg. ping.itlg)")
-if (!fs.existsSync(argv[0])) {
-    throw new Error(argv[0] + " is not a valid code file.")
+margv = process.argv.splice(2);
+if (!margv[0]) throw new Error("No program to run. Specify a code file (eg. ping.itlg)")
+if (!fs.existsSync(margv[0])) {
+    throw new Error(margv[0] + " is not a valid code file.")
 }
 
 var memory = [];
 
 var lineReader = readline.createInterface({
-    input: fs.createReadStream(argv[0])
+    input: fs.createReadStream(margv[0])
 });
 
 function sleep(millis) {
@@ -44,7 +53,7 @@ function get_user_input() {
     });
 }
 
-let program_running = true;
+program_running = true;
 
 lineReader.on('close', async () => {
     while (program_running) {
@@ -114,11 +123,11 @@ lineReader.on('close', async () => {
                 gtx()
             }
         } else if (command == "vnc") {
-            if (!args[0]) throw new Error("no memory address to increment")
+            if (!args[0]) throw new Error("no variable to increment")
             memory[args[0]] += 1;
             gtx();
         } else if (command == "vdc") {
-            if (!args[0]) throw new Error("no memory address to decrement")
+            if (!args[0]) throw new Error("no variable to decrement")
             memory[args[0]] -= 1;
             gtx();
         } else if (command == "gt") {
@@ -157,8 +166,8 @@ lineReader.on('close', async () => {
                 gtx();
             }
         } else if (command == "<") {
-            if (!args[0]) throw new Error("no first number/variable specified")
-            if (!args[1]) throw new Error("no second number/variable specified")
+            if (!args[0]) throw new Error("no first variable/number specified")
+            if (!args[1]) throw new Error("no second variable/number specified")
             if (!args[2]) throw new Error("no line to goto specified")
             fv = args[0];
             if (fv.startsWith("$VAR_")) {
@@ -219,7 +228,7 @@ lineReader.on('close', async () => {
             }
             memory[args[2]] = fv + sv;
             gtx();
-        } else if (command == "subt") {
+        } else if (command == "sub") {
             if (!args[0]) throw new Error("no first number/variable specified");
             if (!args[1]) throw new Error("no second number/variable specified");
             if (!args[2]) throw new Error("no output variable specified");
