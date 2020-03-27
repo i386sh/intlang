@@ -1,0 +1,45 @@
+clear
+
+prt Calculator
+prt 1. +, 2. -, 3. *, 4. /, 5. Exit
+get_input 1
+
+= $VAR_1 1 15
+= $VAR_1 2 23
+= $VAR_1 3 31
+= $VAR_1 4 39
+= $VAR_1 5 45
+
+gt 1
+
+prt First number:
+get_input 2
+prt Second number:
+get_input 3
+add $VAR_2 $VAR_3 4
+prt output: $VAR_4
+exit
+
+prt First number:
+get_input 2
+prt Second number:
+get_input 3
+sub $VAR_2 $VAR_3 4
+prt output: $VAR_4
+exit
+
+prt First number:
+get_input 2
+prt Second number:
+get_input 3
+mult $VAR_2 $VAR_3 4
+prt output: $VAR_4
+exit
+
+prt First number:
+get_input 2
+prt Second number:
+get_input 3
+div $VAR_2 $VAR_3 4
+prt output: $VAR_4
+exit
