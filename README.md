@@ -1,6 +1,12 @@
 # intlang
 An interpreted programming language, that is simple and easy to read.
 
+##### Contribute
+Want to contribute? Fork the project and make a pull request featuring your changes.
+
+##### Issues
+If there's a bug or undocumented feature and you require clarification on how it works, or need it fixed asap, make an issue and I'll get back to you ASAP!
+
 ##### Functions
 I'm probably going to add many more functions to intlang as I don't have too much to do during this time.
 
