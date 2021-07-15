@@ -1,17 +1,5 @@
 # intlang
-An interpreted programming language, that is simple and easy to read.
-
-##### Contribute
-Want to contribute? Fork the project and make a pull request featuring your changes.
-
-##### Issues
-If there's a bug or undocumented feature and you require clarification on how it works, or need it fixed asap, make an issue and I'll get back to you ASAP!
-
 ##### Functions
-I'm probably going to add many more functions to intlang as I don't have too much to do during this time.
-
-26/3/20: I updated how functions are read so it should be more simple for a human to understand.  
-As of 26/3/20 it has these functions:
 ```
 Variable:
 $VAR_<var> <int/float/string> - Saves <int/float/string> to <var>
@@ -63,11 +51,5 @@ exit
 Refer to the function list to understand what to do.
 
 ##### How to run an intlang program.
-To execute an intlang program, currently you'll need node.js, but I'm probably going to work on a script that converts intlang programs to another language that can be compiled to binary form. (Most likely C#, as .NET core allows .NET apps to be somewhat portable now.)
-
-`node interpreter.js <script name>` is the currently preferred method to run an application in intlang.
-
+`node interpreter.js <script name>`. It's pretty self explanatory, no?
 intlang requires no external npm libraries, only built-in node.js libraries (fs, readline).
-
-
-intlang was written by i386sh in March of 2020. Purely a hobby project.
